@@ -2,15 +2,15 @@
 #'
 #' Used to download and install the latest versions of wheels available from <https://github.com/cgohlke/geospatial-wheels>.
 #'
-#' @param package Python package name to install
-#' @param version Python package version to install. Default `"latest"` determines latest version available from asset list.
+#' @param package Python package name to install. e.g. `"rasterio"`
+#' @param version Python package version to install. Default `"latest"` determines latest version available from asset list (considers `pyversion` if set).
 #' @param pyversion Python version to install package for. Default `"latest"` determines latest version available from asset list.
 #' @param architecture Python package version to install. Default `"win_amd64"`, alternatives include `"win_arm64`" and `"win32"`.
 #' @param destdir Destination directory for downloaded wheel file. Default: `tempdir()`
 #' @param url_only Return the URL of the .whl file without downloading? Default: `FALSE`
 #' @param download_only Download .whl file without attempting install? Default: `FALSE`
 #'
-#' @return Called for side effects (download and install a Python wheel). Returns _character_ containing path to .whl file when `download_only=TRUE`.
+#' @return Called for side effects (download and install a Python wheel). Returns _character_ containing path to .whl file when `url_only=TRUE` or `download_only=TRUE`.
 #' @export
 #' @importFrom utils download.file
 install_wheel <- function(package,

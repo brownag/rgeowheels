@@ -15,9 +15,9 @@ install_wheel(
 )
 }
 \arguments{
-\item{package}{Python package name to install}
+\item{package}{Python package name to install. e.g. \code{"rasterio"}}
 
-\item{version}{Python package version to install. Default \code{"latest"} determines latest version available from asset list.}
+\item{version}{Python package version to install. Default \code{"latest"} determines latest version available from asset list (considers \code{pyversion} if set).}
 
 \item{pyversion}{Python version to install package for. Default \code{"latest"} determines latest version available from asset list.}
 
@@ -30,7 +30,7 @@ install_wheel(
 \item{download_only}{Download .whl file without attempting install? Default: \code{FALSE}}
 }
 \value{
-Called for side effects (download and install a Python wheel). Returns \emph{character} containing path to .whl file when \code{download_only=TRUE}.
+Called for side effects (download and install a Python wheel). Returns \emph{character} containing path to .whl file when \code{url_only=TRUE} or \code{download_only=TRUE}.
 }
 \description{
 Used to download and install the latest versions of wheels available from \url{https://github.com/cgohlke/geospatial-wheels}.
