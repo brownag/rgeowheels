@@ -62,11 +62,11 @@
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>package</dt>
-<dd><p>Python package name to install</p></dd>
+<dd><p>Python package name to install. e.g. <code>"rasterio"</code></p></dd>
 
 
 <dt>version</dt>
-<dd><p>Python package version to install. Default <code>"latest"</code> determines latest version available from asset list.</p></dd>
+<dd><p>Python package version to install. Default <code>"latest"</code> determines latest version available from asset list (considers <code>pyversion</code> if set).</p></dd>
 
 
 <dt>pyversion</dt>
@@ -93,7 +93,7 @@
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     
 
-<p>Called for side effects (download and install a Python wheel). Returns <em>character</em> containing path to .whl file when <code>download_only=TRUE</code>.</p>
+<p>Called for side effects (download and install a Python wheel). Returns <em>character</em> containing path to .whl file when <code>url_only=TRUE</code> or <code>download_only=TRUE</code>.</p>
     </div>
 
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
