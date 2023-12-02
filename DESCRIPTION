@@ -9,7 +9,7 @@ Description: Downloads pre-compiled 'Windows' 'wheel' files (.whl) for 'Python' 
   binary installers for some geospatial libraries prepared by Christoph Gohlke.
   Wheels for various packages, 'Python' versions, and architectures are made available
   via 'GitHub' releases, providing the ability to revert to prior versions when needed.
-Imports: tools, utils, jsonlite, data.table
+Imports: tools, utils, jsonlite
 Suggests: rvest
 Encoding: UTF-8
 Language: en-US
