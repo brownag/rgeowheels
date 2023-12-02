@@ -14,7 +14,7 @@ Suggests: rvest
 Encoding: UTF-8
 Language: en-US
 License: CC0
-URL: https://github.com/brownag/rgeowheels, https://humus.rocks/rgeowheels
+URL: https://github.com/brownag/rgeowheels, https://humus.rocks/rgeowheels, http://humus.rocks/rgeowheels/
 BugReports: https://github.com/brownag/rgeowheels/issues
 LazyData: true
 RoxygenNote: 7.2.3
