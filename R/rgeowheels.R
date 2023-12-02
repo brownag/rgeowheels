@@ -1,3 +1,40 @@
+#' Get or Set Python Path
+#'
+#' Set the path the Python binary used to run installation commands. May be a system or virtual/conda environment.
+#'
+#' @param x Path to `python` or `python3` binary.
+#'
+#' @return _character_ Value of option `"rgeowheels.python"`, or, if set, the value of the system environment variable `"R_RGEOWHEELS_PYTHON"`. If neither are set, then the result of `Sys.which("python")` (or `Sys.which("python3")` if the former fails).
+#' @export
+#'
+#' @rdname rgeowheels_python
+set_rgeowheels_python <- function(x) {
+  stopifnot(length(x) == 1)
+  options(rgeowheels.python = x)[[1]]
+  y <- get_rgeowheels_python()
+  if (y != x) {
+    message("note: using Python binary ", shQuote(y))
+  }
+  y
+}
+
+#' @export
+#' @rdname rgeowheels_python
+get_rgeowheels_python <- function() {
+  sp <- Sys.getenv("R_RGEOWHEELS_PYTHON")
+  if (sp == "") {
+    sp <- Sys.which("python")
+    if (sp == "") {
+      sp <- Sys.which("python3")
+    }
+  }
+  res <- getOption("rgeowheels.python", default = sp)
+  if (!file.exists(res)) {
+    res <- sp
+  }
+  res
+}
+
 .get_release <- function(i = 1) {
   if (!requireNamespace("rvest")) {
     stop("package 'rvest' is required to parse the full release list, install it with `install.packages('rvest')", call. = FALSE)

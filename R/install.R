@@ -65,8 +65,7 @@ install_wheel <- function(package,
   }
 
   system(
-    paste(
-      getOption("rgeowheels.python", default = Sys.which("python")),
+    paste(get_rgeowheels_python(),
       "-m pip install",
       tf
     ),
