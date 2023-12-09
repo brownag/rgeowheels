@@ -35,10 +35,8 @@ get_rgeowheels_python <- function() {
   res
 }
 
+#' @importFrom rvest read_html html_elements html_element html_attr
 .get_release <- function(i = 1) {
-  if (!requireNamespace("rvest")) {
-    stop("package 'rvest' is required to parse the full release list, install it with `install.packages('rvest')", call. = FALSE)
-  }
 
   r <- rvest::html_attr(rvest::html_element(rvest::html_elements(
     rvest::read_html(

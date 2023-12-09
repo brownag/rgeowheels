@@ -1,7 +1,7 @@
 Package: rgeowheels
 Type: Package
 Title: Convenient Access to 'Python' 'Wheel' Packages Prepared for 'Windows'
-Version: 0.0.1
+Version: 0.0.2
 Author: Andrew G. Brown
 Maintainer: Andrew G. Brown <brown.andrewg@gmail.com>
 Description: Downloads pre-compiled 'Windows' 'wheel' files (.whl) for 'Python' geospatial 
@@ -9,8 +9,7 @@ Description: Downloads pre-compiled 'Windows' 'wheel' files (.whl) for 'Python' 
   binary installers for some geospatial libraries prepared by Christoph Gohlke.
   Wheels for various packages, 'Python' versions, and architectures are made available
   via 'GitHub' releases, providing the ability to revert to prior versions when needed.
-Imports: tools, utils, jsonlite
-Suggests: rvest
+Imports: tools, utils, jsonlite, rvest
 Encoding: UTF-8
 Language: en-US
 License: CC0
