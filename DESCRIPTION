@@ -1,7 +1,7 @@
 Package: rgeowheels
 Type: Package
 Title: Convenient Access to 'Python' 'Wheel' Packages Prepared for 'Windows'
-Version: 0.0.2
+Version: 0.0.3
 Author: Andrew G. Brown
 Maintainer: Andrew G. Brown <brown.andrewg@gmail.com>
 Description: Downloads pre-compiled 'Windows' 'wheel' files (.whl) for 'Python' geospatial 

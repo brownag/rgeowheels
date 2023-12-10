@@ -54,7 +54,7 @@ install_wheel <- function(package,
       return(path)
     }
     tf <- file.path(destdir, basename(path))
-    res <- try(utils::download.file(path, destfile = tf))
+    res <- try(utils::download.file(path, destfile = tf, mode = "wb"))
     if (inherits(res, 'try-error')) {
       tf <- res
     }
