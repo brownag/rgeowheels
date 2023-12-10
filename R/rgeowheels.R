@@ -35,15 +35,14 @@ get_rgeowheels_python <- function() {
   res
 }
 
-#' @importFrom rvest read_html html_elements html_element html_attr
 .get_release <- function(i = 1) {
 
-  r <- rvest::html_attr(rvest::html_element(rvest::html_elements(
-    rvest::read_html(
-      "https://github.com/cgohlke/geospatial-wheels/releases.atom"
-    ),
-    "entry"
-  ), "link"), "href")
+  r <- try(readLines("https://github.com/cgohlke/geospatial-wheels/releases.atom"))
+  if (inherits(r, 'try-error')) {
+    r <- character()
+  }
+  r <- r[grep("https://github.com/cgohlke/geospatial-wheels/releases/tag", r, fixed = TRUE)]
+  r <- gsub("^.*href=\"(.*)\"/>$", "\\1", r)
 
   if (any(i > length(r)))
     i <- i[i <= length(r)]
