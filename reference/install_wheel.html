@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">rgeowheels</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.3</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.4</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -38,7 +38,7 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="" class="logo" alt=""><h1>Install Python Wheels From 'geospatial-wheels' Repository</h1>
-      <small class="dont-index">Source: <a href="https://github.com/brownag/rgeowheels/blob/HEAD/R/install.R" class="external-link"><code>R/install.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/brownag/rgeowheels/blob/HEAD/R/rgeowheels.R" class="external-link"><code>R/rgeowheels.R</code></a></small>
       <div class="d-none name"><code>install_wheel.Rd</code></div>
     </div>
 
@@ -53,6 +53,7 @@
 <span>  version <span class="op">=</span> <span class="st">"latest"</span>,</span>
 <span>  pyversion <span class="op">=</span> <span class="st">"latest"</span>,</span>
 <span>  architecture <span class="op">=</span> <span class="st">"win_amd64"</span>,</span>
+<span>  python <span class="op">=</span> <span class="fu"><a href="rgeowheels_python.html">get_rgeowheels_python</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  destdir <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  url_only <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  download_only <span class="op">=</span> <span class="cn">FALSE</span></span>
@@ -75,6 +76,10 @@
 
 <dt>architecture</dt>
 <dd><p>Python package version to install. Default <code>"win_amd64"</code>, alternatives include <code>"win_arm64</code>" and <code>"win32"</code>.</p></dd>
+
+
+<dt>python</dt>
+<dd><p>Path to Python executable to use for install. Default: <code><a href="rgeowheels_python.html">get_rgeowheels_python()</a></code></p></dd>
 
 
 <dt>destdir</dt>
