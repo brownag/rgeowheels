@@ -142,6 +142,7 @@ list_assets <- function(release = NULL, update_cache = FALSE) {
 #' @param version Python package version to install. Default `"latest"` determines latest version available from asset list (considers `pyversion` if set).
 #' @param pyversion Python version to install package for. Default `"latest"` determines latest version available from asset list.
 #' @param architecture Python package version to install. Default `"win_amd64"`, alternatives include `"win_arm64`" and `"win32"`.
+#' @param python Path to Python executable to use for install. Default: `get_rgeowheels_python()`
 #' @param destdir Destination directory for downloaded wheel file. Default: `tempdir()`
 #' @param url_only Return the URL of the .whl file without downloading? Default: `FALSE`
 #' @param download_only Download .whl file without attempting install? Default: `FALSE`
@@ -153,6 +154,7 @@ install_wheel <- function(package,
                           version = "latest",
                           pyversion = "latest",
                           architecture = "win_amd64",
+                          python = get_rgeowheels_python(),
                           destdir = tempdir(),
                           url_only = FALSE,
                           download_only = FALSE) {
@@ -201,7 +203,7 @@ install_wheel <- function(package,
   }
 
   system(
-    paste(get_rgeowheels_python(),
+    paste(shQuote(python),
           "-m pip install",
           tf
     ),

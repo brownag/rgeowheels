@@ -9,6 +9,7 @@ install_wheel(
   version = "latest",
   pyversion = "latest",
   architecture = "win_amd64",
+  python = get_rgeowheels_python(),
   destdir = tempdir(),
   url_only = FALSE,
   download_only = FALSE
@@ -22,6 +23,8 @@ install_wheel(
 \item{pyversion}{Python version to install package for. Default \code{"latest"} determines latest version available from asset list.}
 
 \item{architecture}{Python package version to install. Default \code{"win_amd64"}, alternatives include \verb{"win_arm64}" and \code{"win32"}.}
+
+\item{python}{Path to Python executable to use for install. Default: \code{get_rgeowheels_python()}}
 
 \item{destdir}{Destination directory for downloaded wheel file. Default: \code{tempdir()}}
 
