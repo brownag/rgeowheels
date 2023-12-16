@@ -29,7 +29,7 @@ This is a basic example which shows you how to solve a common problem:
 
 ``` r
 library(rgeowheels)
-#> rgeowheels 0.0.1
+#> rgeowheels 0.0.4
 #> Latest cached release: 2023-11-03
 #>  <https://github.com/cgohlke/geospatial-wheels/releases/tag/v2023.11.3>
 
@@ -37,6 +37,5 @@ if (Sys.info()["sysname"] == "Windows")
   install_wheel("GDAL")
 
 install_wheel("rasterio", pyversion = "3.8", url_only = TRUE)
-#> Loading required namespace: rvest
 #> [1] "https://github.com/cgohlke/geospatial-wheels/releases/download/v2023.1.10.1/rasterio-1.3.4-cp38-cp38-win_amd64.whl"
 ```
