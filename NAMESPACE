@@ -2,7 +2,7 @@
 
 export(get_rgeowheels_python)
 export(install_wheel)
-export(list_assets)
+export(list_rgeowheels_assets)
 export(set_rgeowheels_python)
 importFrom(jsonlite,read_json)
 importFrom(tools,R_user_dir)

@@ -12,8 +12,7 @@ Downloads pre-compiled 'Windows' 'wheel' files (.whl) for 'Python' geospatial pa
 Useful links:
 \itemize{
   \item \url{https://github.com/brownag/rgeowheels}
-  \item \url{https://humus.rocks/rgeowheels}
-  \item \url{http://humus.rocks/rgeowheels/}
+  \item \url{https://humus.rocks/rgeowheels/}
   \item Report bugs at \url{https://github.com/brownag/rgeowheels/issues}
 }
 

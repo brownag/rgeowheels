@@ -29,7 +29,7 @@ This is a basic example which shows you how to solve a common problem:
 
 ``` r
 library(rgeowheels)
-#> rgeowheels 0.0.4
+#> rgeowheels 0.0.5
 #> Latest cached release: 2023-11-03
 #>  <https://github.com/cgohlke/geospatial-wheels/releases/tag/v2023.11.3>
 

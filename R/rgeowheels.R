@@ -59,7 +59,7 @@ get_rgeowheels_python <- function() {
 #' @return A _data.frame_ containing  `package`, `version`, `pyversion`, `architecture` and other metadata about each asset in a release.
 #' @export
 #'
-list_assets <- function(release = NULL, update_cache = FALSE) {
+list_rgeowheels_assets <- function(release = NULL, update_cache = FALSE) {
   if (!is.null(release) && release == "latest") {
     l <- .get_latest(update_cache = update_cache)
   } else if (!is.null(release)) {
@@ -162,7 +162,7 @@ install_wheel <- function(package,
   stopifnot(length(package) == 1)
 
   architecture <- match.arg(tolower(trimws(architecture)), c("win32", "win_amd64", "win_arm64"))
-  l <- list_assets()
+  l <- list_rgeowheels_assets()
 
   if (pyversion == "latest" && package %in% l$package) {
     ll <- l[l$package == package, ]

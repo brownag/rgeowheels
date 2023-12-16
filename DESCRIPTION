@@ -1,7 +1,7 @@
 Package: rgeowheels
 Type: Package
 Title: Convenient Access to 'Python' 'Wheel' Packages Prepared for 'Windows'
-Version: 0.0.4
+Version: 0.0.5
 Author: Andrew G. Brown
 Maintainer: Andrew G. Brown <brown.andrewg@gmail.com>
 Description: Downloads pre-compiled 'Windows' 'wheel' files (.whl) for 'Python' geospatial 
@@ -14,8 +14,7 @@ Suggests: tinytest
 Encoding: UTF-8
 Language: en-US
 License: CC0
-URL: https://github.com/brownag/rgeowheels, https://humus.rocks/rgeowheels,
-          http://humus.rocks/rgeowheels/
+URL: https://github.com/brownag/rgeowheels, https://humus.rocks/rgeowheels/
 BugReports: https://github.com/brownag/rgeowheels/issues
 LazyData: true
 RoxygenNote: 7.2.3

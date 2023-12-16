@@ -1,4 +1,4 @@
-x <- try(list_assets())
+x <- try(list_rgeowheels_assets())
 if (!inherits(x, 'try-error')) {
   expect_true(inherits(x, 'data.frame'))
 } else message("getting asset list from GitHub releases failed")
