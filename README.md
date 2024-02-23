@@ -30,12 +30,18 @@ This is a basic example which shows you how to solve a common problem:
 ``` r
 library(rgeowheels)
 #> rgeowheels 0.0.5
-#> Latest cached release: 2023-11-03
-#>  <https://github.com/cgohlke/geospatial-wheels/releases/tag/v2023.11.3>
+#> Latest cached release: 2024-02-19
+#>  <https://github.com/cgohlke/geospatial-wheels/releases/tag/v2024.2.18>
 
+# installing wheels only intended for Windows OS
 if (Sys.info()["sysname"] == "Windows")
   install_wheel("GDAL")
 
+# latest version of GDAL, latest cpython, available for win_amd64 architecture
+install_wheel("GDAL", url_only = TRUE)
+#> [1] "https://github.com/cgohlke/geospatial-wheels/releases/download/v2024.2.18/GDAL-3.8.4-cp312-cp312-win_amd64.whl"
+
+# most recent version of rasterio for cpython 3.8 is in v2023.1.10.1 release
 install_wheel("rasterio", pyversion = "3.8", url_only = TRUE)
 #> [1] "https://github.com/cgohlke/geospatial-wheels/releases/download/v2023.1.10.1/rasterio-1.3.4-cp38-cp38-win_amd64.whl"
 ```

@@ -41,8 +41,13 @@ This is a basic example which shows you how to solve a common problem:
 ```{r example}
 library(rgeowheels)
 
+# installing wheels only intended for Windows OS
 if (Sys.info()["sysname"] == "Windows")
   install_wheel("GDAL")
 
+# latest version of GDAL, latest cpython, available for win_amd64 architecture
+install_wheel("GDAL", url_only = TRUE)
+
+# most recent version of rasterio for cpython 3.8 is in v2023.1.10.1 release
 install_wheel("rasterio", pyversion = "3.8", url_only = TRUE)
 ```
