@@ -4,10 +4,45 @@
 \name{rgeowheels-package}
 \alias{rgeowheels}
 \alias{rgeowheels-package}
-\title{rgeowheels: Convenient Access to 'Python' 'Wheel' Packages Prepared for 'Windows'}
+\title{rgeowheels: Pre-compiled Python Geospatial Wheels for Windows}
 \description{
-Downloads pre-compiled 'Windows' 'wheel' files (.whl) for 'Python' geospatial packages from \url{https://github.com/cgohlke/geospatial-wheels}. These are unofficial binary installers for some geospatial libraries prepared by Christoph Gohlke. Wheels for various packages, 'Python' versions, and architectures are made available via 'GitHub' releases, providing the ability to revert to prior versions when needed.
+Access and install pre-compiled Python geospatial wheels from Christoph Gohlke's
+repository. Automatically detects Python versions and simplifies installation of
+complex packages like GDAL on Windows.
 }
+\section{Main Functions}{
+
+\itemize{
+\item \code{install_wheel()}: Download and install wheels with automatic Python version detection
+\item \code{list_rgeowheels_assets()}: List available wheels from geospatial-wheels repository
+\item \code{detect_python_version()}: Extract Python version from a binary
+\item \code{detect_python_envs()}: Discover available Python environments (venv/conda/system)
+\item \code{get_rgeowheels_python()} / \code{set_rgeowheels_python()}: Manage Python binary path
+}
+}
+
+\section{Auto-Detection Features}{
+
+Use \code{pyversion = "auto"} in \code{install_wheel()} to automatically detect and match
+the current Python version. Suppress informational messages with:
+\itemize{
+\item Environment variable: \code{Sys.setenv(R_RGEOWHEELS_QUIET_AUTO = "TRUE")}
+\item R option: \code{options(rgeowheels.quiet_auto = TRUE)}
+\item Explicit version specification: \code{pyversion = "3.11"}
+}
+}
+
+\section{Virtual Environment Support}{
+
+Full support for Python virtual environments and conda environments. Use
+\code{detect_python_envs()} to discover environments, then activate with reticulate:
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{library(reticulate)
+use_virtualenv(".venv")
+install_wheel("GDAL", pyversion = "auto")
+}\if{html}{\out{</div>}}
+}
+
 \seealso{
 Useful links:
 \itemize{

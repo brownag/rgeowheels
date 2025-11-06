@@ -20,7 +20,7 @@ install_wheel(
 
 \item{version}{Python package version to install. Default \code{"latest"} determines latest version available from asset list (considers \code{pyversion} if set).}
 
-\item{pyversion}{Python version to install package for. Default \code{"latest"} determines latest version available from asset list.}
+\item{pyversion}{Python version to install package for. Default \code{"latest"} determines latest version available from asset list. Use \code{"auto"} to detect the Python version from the specified Python binary.}
 
 \item{architecture}{Python package version to install. Default \code{"win_amd64"}, alternatives include \verb{"win_arm64}" and \code{"win32"}.}
 
