@@ -1,0 +1,337 @@
+---
+title: "Installing GDAL on Windows with rgeowheels"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Installing GDAL on Windows with rgeowheels}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  eval = FALSE
+)
+```
+
+## Overview
+
+Installing geospatial Python packages on Windows can be challenging due to complex binary dependencies and the need for pre-compiled wheels. The **rgeowheels** package dramatically simplifies this process by providing convenient access to Christoph Gohlke's curated collection of pre-compiled geospatial wheels, especially for GDAL and related libraries.
+
+This vignette demonstrates how to:
+
+1. Create and activate a virtual environment for Python development
+2. Detect available Python versions in your environment
+3. Use rgeowheels to install geospatial wheels (like GDAL) into that environment
+4. Verify the installation works with reticulate
+
+This workflow is particularly useful for:
+
+- **Continuous Integration (CI) workflows** where you need reproducible Python environments
+- **Reticulate-based R packages** that require specific geospatial dependencies
+- **Development workflows** where you want isolated Python environments per project
+
+## Getting Started: Creating a Virtual Environment
+
+The recommended approach is to create a dedicated Python virtual environment for your project. This isolates your project dependencies from system Python and other projects.
+
+### Using reticulate to Create a Venv
+
+If you already have Python installed, you can create a virtual environment directly in R using **reticulate**:
+
+```{r}
+library(reticulate)
+
+# Create a virtual environment in your project directory
+venv_path <- file.path(getwd(), ".venv")
+virtualenv_create(venv_path, python = Sys.which("python"))
+
+# Activate the virtual environment
+use_virtualenv(venv_path, required = TRUE)
+```
+
+Alternatively, create the venv from the command line:
+
+```bash
+# Windows Command Prompt
+python -m venv .venv
+.venv\Scripts\activate.bat
+
+# Or PowerShell
+python -m venv .venv
+.venv\Scripts\Activate.ps1
+
+# Or using conda
+conda create -n myenv python=3.11
+conda activate myenv
+```
+
+## Detecting Available Python Versions
+
+Before installing wheels, it's helpful to understand what Python environments are available. The `detect_python_envs()` function scans your system for virtual environments and conda environments:
+
+```{r}
+library(rgeowheels)
+
+# Discover available Python environments
+envs <- detect_python_envs()
+print(envs)
+
+# Output example:
+#        type            path version active
+# 1      venv /path/to/.venv   3.11   TRUE
+# 2     system  /usr/bin/python   3.11   FALSE
+```
+
+You can also check the Python version of a specific environment:
+
+```{r}
+# Get the version of the currently active Python
+current_version <- detect_python_version()
+print(current_version)
+# [1] "3.11"
+
+# Or check a specific Python binary
+venv_python <- file.path(".venv", "Scripts", "python.exe")  # Windows
+venv_version <- detect_python_version(venv_python)
+```
+
+## Installing GDAL via rgeowheels
+
+Once you have a Python environment set up and activated, installing GDAL is straightforward:
+
+### Basic Installation (Auto-Detect Python Version)
+
+The simplest approach is to use `pyversion = "auto"` to automatically detect your Python version and match it to available wheels:
+
+```{r}
+library(rgeowheels)
+library(reticulate)
+
+# Ensure your virtual environment is active
+use_virtualenv(".venv", required = TRUE)
+
+# Install GDAL - automatically detects Python version
+install_wheel("GDAL", version = "latest", pyversion = "auto")
+```
+
+This will:
+
+1. Detect your active Python version (e.g., "3.11")
+2. Display a message: `"Auto-selected Python 3.11 for GDAL"`
+3. Find and download the matching GDAL wheel
+4. Install it via `pip`
+
+### Suppressing the Auto-Detect Message
+
+If you want to use auto-detection but suppress the informational message (useful in scripts or CI), you have three options:
+
+**Option 1: Set an environment variable**
+
+```{r}
+Sys.setenv(R_RGEOWHEELS_QUIET_AUTO = "TRUE")
+install_wheel("GDAL", pyversion = "auto")
+```
+
+**Option 2: Set an R option**
+
+```{r}
+options(rgeowheels.quiet_auto = TRUE)
+install_wheel("GDAL", pyversion = "auto")
+```
+
+**Option 3: Explicitly specify the Python version**
+
+```{r}
+# Once you know the version, you can pin it explicitly (message is suppressed)
+install_wheel("GDAL", pyversion = "3.11")
+```
+
+### Explicit Version Specification
+
+If you need a specific version of GDAL for a specific Python version:
+
+```{r}
+install_wheel(
+  package = "GDAL",
+  version = "3.8.4",        # Specific GDAL version
+  pyversion = "3.11",       # Specific Python version
+  architecture = "win_amd64" # Windows 64-bit (default)
+)
+```
+
+### Check Available Versions
+
+Before installing, you can see what versions are available:
+
+```{r}
+# List all available wheels
+assets <- list_rgeowheels_assets()
+
+# Filter for GDAL
+gdal_wheels <- assets[assets$package == "GDAL", ]
+print(gdal_wheels[, c("package", "version", "pyversion", "architecture")])
+
+# Or with a specific Python version
+gdal_py311 <- assets[assets$package == "GDAL" & assets$pyversion == "3.11", ]
+```
+
+## Complete Workflow Example: CI/CD Integration with Reticulate
+
+Here's a complete workflow combining reticulate venv creation with rgeowheels installation:
+
+```{r}
+library(reticulate)
+library(rgeowheels)
+
+# 1. Create a virtual environment
+venv_path <- file.path(getwd(), ".venv")
+if (!dir.exists(venv_path)) {
+  virtualenv_create(venv_path, python = Sys.which("python"))
+}
+
+# 2. Activate it
+use_virtualenv(venv_path, required = TRUE)
+
+# 3. Detect available Python in this venv
+envs <- detect_python_envs()
+print(envs)
+
+# 4. Install geospatial wheels
+install_wheel("GDAL", version = "latest", pyversion = "auto")
+install_wheel("rasterio", version = "latest", pyversion = "auto")
+install_wheel("fiona", version = "latest", pyversion = "auto")
+
+# 5. Verify installations
+py_run_string("import gdal; print(f'GDAL {gdal.__version__}')")
+py_run_string("import rasterio; print(f'Rasterio {rasterio.__version__}')")
+
+# 6. Use Python objects in R
+py_run_string("
+import rasterio
+from rasterio.plot import show
+# ... your geospatial Python code here
+")
+```
+
+## Troubleshooting
+
+### "Could not find wheels for..." Error
+
+If you see an error like:
+
+```
+could not find wheels for:
+     - 'GDAL' version 'latest' for Python '3.9' (win_amd64)
+     Available Python versions for 'GDAL' (win_amd64): 3.10, 3.11, 3.12
+```
+
+This means GDAL wheels aren't available for Python 3.9. You have two options:
+
+1. **Update Python**: Upgrade to a supported version (3.10, 3.11, or 3.12)
+2. **Explicit version**: Specify an available Python version
+
+```{r}
+# Upgrade your venv to Python 3.11
+virtualenv_create(".venv_311", python = "C:/Python311/python.exe")
+use_virtualenv(".venv_311")
+
+# Or explicitly request 3.11
+install_wheel("GDAL", pyversion = "3.11")
+```
+
+### Python Binary Not Found
+
+If `detect_python_version()` fails with "Python binary not found", ensure:
+
+1. Python is installed and in your PATH: `Sys.which("python")`
+2. Your virtual environment is activated: `use_virtualenv(".venv")`
+3. You've set the Python path explicitly:
+
+```{r}
+set_rgeowheels_python("C:/path/to/venv/Scripts/python.exe")
+detect_python_version()
+```
+
+### Setting Custom Python Path
+
+If you have multiple Python installations, you can explicitly set which one rgeowheels uses:
+
+```{r}
+# Set for this session
+set_rgeowheels_python("C:/Python311/python.exe")
+
+# Or via environment variable (persists across R sessions)
+Sys.setenv(R_RGEOWHEELS_PYTHON = "C:/Python311/python.exe")
+```
+
+## CI/CD Integration Examples
+
+### GitHub Actions Workflow
+
+Here's a sample abbreviated YAML configuration for using rgeowheels in GitHub Actions CI:
+
+```yaml
+name: Test with GDAL
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        python-version: ['3.10', '3.11', '3.12']
+        r-version: ['4.2', '4.3']
+
+    steps:
+      - uses: actions/checkout@v3
+      
+      - uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+      
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: ${{ matrix.r-version }}
+      
+      - name: Install R packages
+        run: |
+          install.packages(c("reticulate", "rgeowheels"))
+        shell: Rscript {0}
+      
+      - name: Install Python geospatial wheels
+        run: |
+          library(rgeowheels)
+          library(reticulate)
+          use_python(Sys.which("python"))
+          install_wheel("GDAL", pyversion = "auto")
+          install_wheel("rasterio", pyversion = "auto")
+        shell: Rscript {0}
+      
+      - name: Run tests
+        run: |
+          Rscript -e 'testthat::test_dir("tests")'
+```
+
+## Performance Benefits
+
+The rgeowheels workflow provides significant advantages on Windows:
+
+1. **Speed**: Pre-compiled wheels install in seconds (vs. compilation time)
+2. **Reliability**: No compiler requirements or build failures
+3. **Reproducibility**: Exact versions specified and matched consistently
+4. **Simplicity**: One-line installation via `install_wheel()`
+5. **CI/CD-friendly**: Works seamlessly in headless environments
+
+## Summary
+
+By combining **rgeowheels** with **reticulate**'s virtual environment management, you can create reproducible, isolated Python development environments on Windows with geospatial dependencies installed in seconds. This is especially valuable for:
+
+- Complex R packages that bridge to geospatial Python libraries
+- Data science workflows requiring both R and Python geospatial tools
+- CI/CD pipelines where consistent environments are critical
+- Teams working on Windows systems without compiler infrastructure
+
+For more information, see `?install_wheel`, `?detect_python_version`, and `?detect_python_envs`.
