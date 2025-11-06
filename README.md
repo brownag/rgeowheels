@@ -4,6 +4,8 @@
 # {rgeowheels}
 
 <!-- badges: start -->
+
+[![R-CMD-check](https://github.com/brownag/rgeowheels/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/brownag/rgeowheels/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 Downloads pre-compiled Windows ‘wheel’ files (.whl) for Python

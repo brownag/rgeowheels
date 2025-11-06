@@ -16,6 +16,7 @@ knitr::opts_chunk$set(
 # {rgeowheels}
 
 <!-- badges: start -->
+[![R-CMD-check](https://github.com/brownag/rgeowheels/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/brownag/rgeowheels/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 Downloads pre-compiled Windows 'wheel' files (.whl) for Python geospatial packages from <https://github.com/cgohlke/geospatial-wheels>. These are unofficial binary installers for some Python geospatial libraries on Windows prepared by Christoph Gohlke. Wheels for various packages, Python versions, and architectures are made available via GitHub releases, providing the ability to revert to prior versions when needed.
