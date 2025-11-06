@@ -70,7 +70,7 @@ NULL
           NULL
         }
       )
-      if (!is.null(freshness) && !freshness$fresh && !is.null(freshness$current_tag) && !is.null(freshness$latest_tag)) {
+      if (!is.null(freshness) && isFALSE(freshness$fresh) && !is.null(freshness$current_tag) && !is.null(freshness$latest_tag)) {
         stale_msg <- paste0("\n - Cache is outdated (current: ", freshness$current_tag,
                            ", latest: ", freshness$latest_tag, ")")
       }
