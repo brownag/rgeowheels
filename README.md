@@ -1,5 +1,5 @@
 
-<!-- README.md is generated from README.Rmd. Please edit that file -->
+<!-- This file is read-only. README.md is generated from README.Rmd. Please edit README.Rmd and render with rmarkdown::render() -->
 
 # {rgeowheels}
 
@@ -18,16 +18,16 @@ needed.
 
 **Key Features:**
 
-- **Automatic Python Version Detection** — Use `pyversion = "auto"` to
+- **Automatic Python Version Detection**: Use `pyversion = "auto"` to
   automatically detect and match your Python version
-- **Virtual Environment Support** — Works seamlessly with Python virtual
+- **Virtual Environment Support**: Works seamlessly with Python virtual
   environments and conda environments
-- **Environment Discovery** — Discover available Python environments
-  with `detect_python_envs()`
-- **CI/CD Friendly** — Perfect for GitHub Actions and other CI workflows
+- **Environment Discovery**: Discover available Python environments with
+  `detect_python_envs()`
+- **CI/CD Friendly**: Perfect for GitHub Actions and other CI workflows
   on Windows
-- **Simplified GDAL Installation** — Install complex geospatial
-  libraries in seconds
+- **Simplified Installation**: Install complex geospatial libraries in
+  seconds
 
 ## Installation
 
@@ -48,7 +48,7 @@ library(rgeowheels)
 
 # Auto-detect Python version and install GDAL
 install_wheel("GDAL", pyversion = "auto")
-#> Auto-selected Python 3.11 for GDAL
+#> Display a message: "Auto-selected Python 3.11 for GDAL"
 ```
 
 For more details, see the vignette:
@@ -61,29 +61,38 @@ For more details, see the vignette:
 ``` r
 library(rgeowheels)
 #> rgeowheels 0.1.0
-#>  - Latest cached release: 2025-07-05
-#>  <https://github.com/cgohlke/geospatial-wheels/releases/tag/v2025.7.4>
+#>  - Latest cached release: 2025-10-26
+#>  <https://github.com/cgohlke/geospatial-wheels/releases/tag/v2025.10.25>
 
 # See all available wheels
 assets <- list_rgeowheels_assets()
 
 # Filter for specific package
-gdal_wheels <- assets[assets$package == "GDAL", ]
+gdal_wheels <- subset(assets, package == "gdal")
 head(gdal_wheels[, c("package", "version", "pyversion", "architecture")])
-#>     package version pyversion architecture
-#> 313    GDAL  3.10.1      3.10        win32
-#> 314    GDAL  3.10.1      3.10    win_amd64
-#> 315    GDAL  3.10.1      3.11        win32
-#> 316    GDAL  3.10.1      3.11    win_amd64
-#> 317    GDAL  3.10.1      3.11    win_arm64
-#> 318    GDAL  3.10.1      3.12        win32
+#>    package version pyversion architecture
+#> 61    gdal  3.11.4      3.11        win32
+#> 62    gdal  3.11.4      3.11    win_amd64
+#> 63    gdal  3.11.4      3.11    win_arm64
+#> 64    gdal  3.11.4      3.12        win32
+#> 65    gdal  3.11.4      3.12    win_amd64
+#> 66    gdal  3.11.4      3.12    win_arm64
+```
+
+# Get URL to Wheel File
+
+``` r
+# Auto-detect your Python version and return URL
+install_wheel("gdal", pyversion = "auto", url_only = TRUE)
+#> Auto-selected Python 3.12 for gdal
+#> [1] "https://github.com/cgohlke/geospatial-wheels/releases/download/v2025.10.25/gdal-3.11.4-cp312-cp312-win_amd64.whl"
 ```
 
 ### Install with automatic Python version detection
 
 ``` r
 # Auto-detect your Python version and install
-install_wheel("GDAL", pyversion = "auto")
+install_wheel("gdal", pyversion = "auto")
 
 # Suppress the info message
 Sys.setenv(R_RGEOWHEELS_QUIET_AUTO = "TRUE")
@@ -97,8 +106,7 @@ install_wheel("fiona", pyversion = "3.11")
 
 ``` r
 # Find available Python environments
-envs <- detect_python_envs()
-envs
+detect_python_envs()
 #>          type            path version active
 #> python system /usr/bin/python    3.12   TRUE
 ```

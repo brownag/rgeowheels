@@ -12,7 +12,10 @@ vignette: >
 has_reticulate <- requireNamespace("reticulate", quietly = TRUE)
 has_rgeowheels <- requireNamespace("rgeowheels", quietly = TRUE)
 
-# By default, don't execute chunks (they require manual setup)
+# Check if running on Windows (required for wheel installation)
+is_windows <- .Platform$OS.type == "windows"
+
+# By default, don't execute chunks (they require manual setup and Windows)
 # Individual chunks can opt-in with eval = TRUE
 knitr::opts_chunk$set(
   collapse = TRUE,
@@ -24,6 +27,8 @@ knitr::opts_chunk$set(
 ## Overview
 
 Installing geospatial Python packages on Windows can be challenging due to complex binary dependencies and the need for pre-compiled wheels. The **rgeowheels** package dramatically simplifies this process by providing convenient access to Christoph Gohlke's curated collection of pre-compiled geospatial wheels, especially for GDAL and related libraries.
+
+**Note:** This vignette demonstrates Windows-specific workflows. The code examples will only execute successfully on Windows systems, as rgeowheels provides pre-compiled wheels specifically for Windows architectures (win32, win_amd64, win_arm64).
 
 This vignette demonstrates how to:
 
@@ -77,17 +82,12 @@ conda activate myenv
 
 Before installing wheels, it's helpful to understand what Python environments are available. The `detect_python_envs()` function scans your system for virtual environments and conda environments:
 
-```{r detect-envs, eval = requireNamespace("rgeowheels", quietly = TRUE)}
+```{r detect-envs, eval = requireNamespace("rgeowheels", quietly = TRUE) && is_windows}
 library(rgeowheels)
 
 # Discover available Python environments
 envs <- detect_python_envs()
-print(envs)
-
-# Output example:
-#        type            path version active
-# 1      venv /path/to/.venv   3.11   TRUE
-# 2     system  /usr/bin/python   3.11   FALSE
+envs
 ```
 
 You can also check the Python version of a specific environment:
@@ -95,14 +95,13 @@ You can also check the Python version of a specific environment:
 ```{r detect-version, eval = FALSE}
 # Get the version of the currently active Python
 current_version <- detect_python_version()
-print(current_version)
-# [1] "3.11"
+current_version
 
 # Or check a specific Python binary (wrapped in try to handle venv if not present)
 venv_python <- file.path(".venv", "Scripts", "python.exe")  # Windows
 if (file.exists(venv_python)) {
   venv_version <- detect_python_version(venv_python)
-  print(venv_version)
+  venv_version
 }
 ```
 
@@ -174,7 +173,7 @@ install_wheel(
 
 Before installing, you can see what versions are available:
 
-```{r list-versions, eval = requireNamespace("rgeowheels", quietly = TRUE)}
+```{r list-versions, eval = requireNamespace("rgeowheels", quietly = TRUE) && is_windows}
 # List all available wheels
 assets <- list_rgeowheels_assets()
 
@@ -204,8 +203,7 @@ if (!dir.exists(venv_path)) {
 use_virtualenv(venv_path, required = TRUE)
 
 # 3. Detect available Python in this venv
-envs <- detect_python_envs()
-print(envs)
+detect_python_envs()
 
 # 4. Install geospatial wheels
 install_wheel("GDAL", version = "latest", pyversion = "auto")
