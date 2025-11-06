@@ -287,7 +287,7 @@ refresh_rgeowheels_cache <- function() {
   ), silent = TRUE)
 
   if (inherits(latest_res, 'try-error')) {
-    result <- list(fresh = TRUE, current_tag = NULL, latest_tag = NULL)
+    result <- list(fresh = NA, current_tag = NULL, latest_tag = NULL)
   } else {
     latest_tag <- latest_res$tag_name
 
@@ -327,7 +327,7 @@ list_rgeowheels_assets <- function(release = NULL, update_cache = FALSE, check_f
   # Check cache freshness if requested and not forcing update
   if (isTRUE(check_freshness) && !isTRUE(update_cache)) {
     freshness <- .check_cache_freshness()
-    if (!freshness$fresh && !is.null(freshness$current_tag) && !is.null(freshness$latest_tag)) {
+    if (isFALSE(freshness$fresh) && !is.null(freshness$current_tag) && !is.null(freshness$latest_tag)) {
       message("rgeowheels cache is outdated (current: ", freshness$current_tag,
               ", latest: ", freshness$latest_tag, "). Consider running refresh_rgeowheels_cache().")
     }
@@ -523,7 +523,18 @@ install_wheel <- function(package,
   pkg_assets <- assets[tolower(assets$package) == tolower(package) & assets$architecture == architecture, ]
   if (nrow(pkg_assets) > 0) {
     avail_pyversions <- unique(pkg_assets$pyversion)
-    avail_pyversions <- sort(avail_pyversions)
+    
+    pv <- package_version(avail_pyversions, strict = FALSE)
+    na_mask <- is.na(pv)
+    if (any(na_mask)) {
+      valid_order <- order(pv[!na_mask])
+      na_order <- order(avail_pyversions[na_mask])
+      combined_order <- c(which(!na_mask)[valid_order], which(na_mask)[na_order])
+    } else {
+      combined_order <- order(pv)
+    }
+    avail_pyversions <- avail_pyversions[combined_order]
+    
     msg <- paste0("\n     Available Python versions for '", package, "' (", architecture, "): ",
                   paste(avail_pyversions, collapse = ", "))
   }
