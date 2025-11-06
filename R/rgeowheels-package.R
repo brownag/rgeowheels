@@ -63,8 +63,14 @@ NULL
     stale_msg <- ""
     cache_age_hours <- difftime(Sys.time(), file.mtime(cp), units = "hours")
     if (cache_age_hours > 24) {
-      freshness <- .check_cache_freshness()
-      if (!freshness$fresh && !is.null(freshness$current_tag) && !is.null(freshness$latest_tag)) {
+      freshness <- tryCatch(
+        .check_cache_freshness(),
+        error = function(e) {
+          # Network error or offline: skip freshness check
+          NULL
+        }
+      )
+      if (!is.null(freshness) && !freshness$fresh && !is.null(freshness$current_tag) && !is.null(freshness$latest_tag)) {
         stale_msg <- paste0("\n - Cache is outdated (current: ", freshness$current_tag,
                            ", latest: ", freshness$latest_tag, ")")
       }

@@ -303,13 +303,13 @@ refresh_rgeowheels_cache <- function() {
       current_tag = current_tag,
       latest_tag = latest_tag
     )
-  }
 
-  freshness_cache <- list(
-    checked_at = Sys.time(),
-    result = result
-  )
-  saveRDS(freshness_cache, ff)
+    freshness_cache <- list(
+      checked_at = Sys.time(),
+      result = result
+    )
+    saveRDS(freshness_cache, ff)
+  }
 
   result
 }
