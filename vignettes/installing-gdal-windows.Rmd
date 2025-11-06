@@ -211,7 +211,7 @@ install_wheel("rasterio", version = "latest", pyversion = "auto")
 install_wheel("fiona", version = "latest", pyversion = "auto")
 
 # 5. Verify installations
-py_run_string("import gdal; print(f'GDAL {gdal.__version__}')")
+py_run_string("from osgeo import gdal; print(f'GDAL {gdal.__version__}')")
 py_run_string("import rasterio; print(f'Rasterio {rasterio.__version__}')")
 
 # 6. Use Python objects in R

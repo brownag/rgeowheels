@@ -22,7 +22,7 @@ install_wheel(
 
 \item{pyversion}{Python version to install package for. Default \code{"latest"} determines latest version available from asset list. Use \code{"auto"} to detect the Python version from the specified Python binary.}
 
-\item{architecture}{Target architecture for the wheel to install. Default \code{"win_amd64"}, alternatives include \verb{"win_arm64}" and \code{"win32"}.}
+\item{architecture}{Target architecture for the wheel to install. Default \code{"win_amd64"}, alternatives include \code{"win_arm64"} and \code{"win32"}.}
 
 \item{python}{Path to Python executable to use for install. Default: \code{get_rgeowheels_python()}}
 
@@ -36,5 +36,5 @@ install_wheel(
 Called for side effects (download and install a Python wheel). Returns \emph{character} containing path to .whl file when \code{url_only=TRUE} or \code{download_only=TRUE}.
 }
 \description{
-Used to download and install the latest versions of wheels available from \url{https://github.com/cgohlke/geospatial-wheels}.
+Install Python Wheels From 'geospatial-wheels' Repository
 }

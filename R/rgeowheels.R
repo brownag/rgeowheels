@@ -424,12 +424,12 @@ list_rgeowheels_assets <- function(release = NULL, update_cache = FALSE, check_f
 
 #' Install Python Wheels From 'geospatial-wheels' Repository
 #'
-#' Used to download and install the latest versions of wheels available from <https://github.com/cgohlke/geospatial-wheels>.
+#` Used to download and install the latest versions of wheels available from <https://github.com/cgohlke/geospatial-wheels>.
 #'
 #' @param package Python package name to install. e.g. `"rasterio"`
 #' @param version Python package version to install. Default `"latest"` determines latest version available from asset list (considers `pyversion` if set).
 #' @param pyversion Python version to install package for. Default `"latest"` determines latest version available from asset list. Use `"auto"` to detect the Python version from the specified Python binary.
-#' @param architecture Target architecture for the wheel to install. Default `"win_amd64"`, alternatives include `"win_arm64`" and `"win32"`.
+#' @param architecture Target architecture for the wheel to install. Default \code{"win_amd64"}, alternatives include \code{"win_arm64"} and \code{"win32"}.
 #' @param python Path to Python executable to use for install. Default: `get_rgeowheels_python()`
 #' @param destdir Destination directory for downloaded wheel file. Default: `tempdir()`
 #' @param url_only Return the URL of the .whl file without downloading? Default: `FALSE`
