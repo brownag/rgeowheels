@@ -1,10 +1,16 @@
 <urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
 <url><loc>http://humus.rocks/rgeowheels/404.html</loc></url>
+<url><loc>http://humus.rocks/rgeowheels/articles/index.html</loc></url>
+<url><loc>http://humus.rocks/rgeowheels/articles/installing-gdal-windows.html</loc></url>
 <url><loc>http://humus.rocks/rgeowheels/authors.html</loc></url>
 <url><loc>http://humus.rocks/rgeowheels/index.html</loc></url>
+<url><loc>http://humus.rocks/rgeowheels/news/index.html</loc></url>
+<url><loc>http://humus.rocks/rgeowheels/reference/detect_python_envs.html</loc></url>
+<url><loc>http://humus.rocks/rgeowheels/reference/detect_python_version.html</loc></url>
 <url><loc>http://humus.rocks/rgeowheels/reference/index.html</loc></url>
 <url><loc>http://humus.rocks/rgeowheels/reference/install_wheel.html</loc></url>
-<url><loc>http://humus.rocks/rgeowheels/reference/list_assets.html</loc></url>
+<url><loc>http://humus.rocks/rgeowheels/reference/list_rgeowheels_assets.html</loc></url>
+<url><loc>http://humus.rocks/rgeowheels/reference/refresh_rgeowheels_cache.html</loc></url>
 <url><loc>http://humus.rocks/rgeowheels/reference/rgeowheels-package.html</loc></url>
 <url><loc>http://humus.rocks/rgeowheels/reference/rgeowheels_python.html</loc></url>
 </urlset>

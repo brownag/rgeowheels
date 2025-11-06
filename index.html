@@ -11,8 +11,8 @@
 <script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Convenient Access to Python Wheel Packages Prepared for Windows">
-<meta name="description" content="Downloads pre-compiled Windows wheel files (.whl) for Python geospatial packages from &lt;https://github.com/cgohlke/geospatial-wheels&gt;. These are unofficial binary installers for some geospatial libraries prepared by Christoph Gohlke. Wheels for various packages, Python versions, and architectures are made available via GitHub releases, providing the ability to revert to prior versions when needed.">
-<meta property="og:description" content="Downloads pre-compiled Windows wheel files (.whl) for Python geospatial packages from &lt;https://github.com/cgohlke/geospatial-wheels&gt;. These are unofficial binary installers for some geospatial libraries prepared by Christoph Gohlke. Wheels for various packages, Python versions, and architectures are made available via GitHub releases, providing the ability to revert to prior versions when needed.">
+<meta name="description" content="Downloads pre-compiled Windows wheel files (.whl) for Python geospatial packages from &lt;https://github.com/cgohlke/geospatial-wheels&gt;. These are unofficial binary installers for some geospatial libraries prepared by Christoph Gohlke. Wheels for various packages, Python versions, and architectures are made available via GitHub releases, providing the ability to revert to prior versions when needed. Automatically detects and matches Python versions, with support for virtual environments and conda environments.">
+<meta property="og:description" content="Downloads pre-compiled Windows wheel files (.whl) for Python geospatial packages from &lt;https://github.com/cgohlke/geospatial-wheels&gt;. These are unofficial binary installers for some geospatial libraries prepared by Christoph Gohlke. Wheels for various packages, Python versions, and architectures are made available via GitHub releases, providing the ability to revert to prior versions when needed. Automatically detects and matches Python versions, with support for virtual environments and conda environments.">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -22,7 +22,7 @@
 
     <a class="navbar-brand me-2" href="index.html">rgeowheels</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.4</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -32,6 +32,13 @@
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto">
 <li class="nav-item"><a class="nav-link" href="reference/index.html">Reference</a></li>
+<li class="nav-item dropdown">
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
+<li><a class="dropdown-item" href="articles/installing-gdal-windows.html">Installing GDAL on Windows with rgeowheels</a></li>
+  </ul>
+</li>
+<li class="nav-item"><a class="nav-link" href="news/index.html">Changelog</a></li>
       </ul>
 <ul class="navbar-nav">
 <li class="nav-item"><form class="form-inline" role="search">
@@ -49,8 +56,22 @@
 <div class="page-header"><h1 id="rgeowheels">{rgeowheels}<a class="anchor" aria-label="anchor" href="#rgeowheels"></a>
 </h1></div>
 <!-- badges: start -->
-<!-- badges: end -->
+
 <p>Downloads pre-compiled Windows ‘wheel’ files (.whl) for Python geospatial packages from <a href="https://github.com/cgohlke/geospatial-wheels" class="external-link uri">https://github.com/cgohlke/geospatial-wheels</a>. These are unofficial binary installers for some Python geospatial libraries on Windows prepared by Christoph Gohlke. Wheels for various packages, Python versions, and architectures are made available via GitHub releases, providing the ability to revert to prior versions when needed.</p>
+<p><strong>Key Features:</strong></p>
+<ul>
+<li>
+<strong>Automatic Python Version Detection</strong>: Use <code>pyversion = "auto"</code> to automatically detect and match your Python version</li>
+<li>
+<strong>Virtual Environment Support</strong>: Works seamlessly with Python virtual environments and conda environments</li>
+<li>
+<strong>Environment Discovery</strong>: Discover available Python environments with <code><a href="reference/detect_python_envs.html">detect_python_envs()</a></code>
+</li>
+<li>
+<strong>CI/CD Friendly</strong>: Perfect for GitHub Actions and other CI workflows on Windows</li>
+<li>
+<strong>Simplified Installation</strong>: Install complex geospatial libraries in seconds</li>
+</ul>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
@@ -60,22 +81,110 @@
 <span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"brownag/rgeowheels"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a>
+<h2 id="quick-start">Quick Start<a class="anchor" aria-label="anchor" href="#quick-start"></a>
 </h2>
-<p>This is a basic example which shows you how to solve a common problem:</p>
+<p>The simplest way to install a wheel is to use automatic Python version detection:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/brownag/rgeowheels" class="external-link">rgeowheels</a></span><span class="op">)</span></span>
-<span><span class="co">#&gt; rgeowheels 0.0.4</span></span>
-<span><span class="co">#&gt; Latest cached release: 2023-11-03</span></span>
-<span><span class="co">#&gt;  &lt;https://github.com/cgohlke/geospatial-wheels/releases/tag/v2023.11.3&gt;</span></span>
 <span></span>
-<span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Sys.info.html" class="external-link">Sys.info</a></span><span class="op">(</span><span class="op">)</span><span class="op">[</span><span class="st">"sysname"</span><span class="op">]</span> <span class="op">==</span> <span class="st">"Windows"</span><span class="op">)</span></span>
-<span>  <span class="fu"><a href="reference/install_wheel.html">install_wheel</a></span><span class="op">(</span><span class="st">"GDAL"</span><span class="op">)</span></span>
+<span><span class="co"># Auto-detect Python version and install GDAL</span></span>
+<span><span class="fu"><a href="reference/install_wheel.html">install_wheel</a></span><span class="op">(</span><span class="st">"GDAL"</span>, pyversion <span class="op">=</span> <span class="st">"auto"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Display a message: "Auto-selected Python 3.11 for GDAL"</span></span></code></pre></div>
+<p>For more details, see the vignette: <code><a href="articles/installing-gdal-windows.html">vignette("installing-gdal-windows")</a></code></p>
+</div>
+<div class="section level2">
+<h2 id="examples">Examples<a class="anchor" aria-label="anchor" href="#examples"></a>
+</h2>
+<div class="section level3">
+<h3 id="list-available-packages-and-versions">List available packages and versions<a class="anchor" aria-label="anchor" href="#list-available-packages-and-versions"></a>
+</h3>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/brownag/rgeowheels" class="external-link">rgeowheels</a></span><span class="op">)</span></span>
+<span><span class="co">#&gt; rgeowheels 0.1.0</span></span>
+<span><span class="co">#&gt;  - Latest cached release: 2025-10-26</span></span>
+<span><span class="co">#&gt;  &lt;https://github.com/cgohlke/geospatial-wheels/releases/tag/v2025.10.25&gt;</span></span>
 <span></span>
-<span><span class="fu"><a href="reference/install_wheel.html">install_wheel</a></span><span class="op">(</span><span class="st">"rasterio"</span>, pyversion <span class="op">=</span> <span class="st">"3.8"</span>, url_only <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "https://github.com/cgohlke/geospatial-wheels/releases/download/v2023.1.10.1/rasterio-1.3.4-cp38-cp38-win_amd64.whl"</span></span></code></pre></div>
+<span><span class="co"># See all available wheels</span></span>
+<span><span class="va">assets</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/list_rgeowheels_assets.html">list_rgeowheels_assets</a></span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Filter for specific package</span></span>
+<span><span class="va">gdal_wheels</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">assets</span>, <span class="va">package</span> <span class="op">==</span> <span class="st">"gdal"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">gdal_wheels</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"package"</span>, <span class="st">"version"</span>, <span class="st">"pyversion"</span>, <span class="st">"architecture"</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span>
+<span><span class="co">#&gt;    package version pyversion architecture</span></span>
+<span><span class="co">#&gt; 61    gdal  3.11.4      3.11        win32</span></span>
+<span><span class="co">#&gt; 62    gdal  3.11.4      3.11    win_amd64</span></span>
+<span><span class="co">#&gt; 63    gdal  3.11.4      3.11    win_arm64</span></span>
+<span><span class="co">#&gt; 64    gdal  3.11.4      3.12        win32</span></span>
+<span><span class="co">#&gt; 65    gdal  3.11.4      3.12    win_amd64</span></span>
+<span><span class="co">#&gt; 66    gdal  3.11.4      3.12    win_arm64</span></span></code></pre></div>
 </div>
 </div>
+</div>
+<div class="section level1">
+<h1 id="get-url-to-wheel-file">Get URL to Wheel File<a class="anchor" aria-label="anchor" href="#get-url-to-wheel-file"></a>
+</h1>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/brownag/rgeowheels" class="external-link">rgeowheels</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Auto-detect your Python version and return URL</span></span>
+<span><span class="fu"><a href="reference/install_wheel.html">install_wheel</a></span><span class="op">(</span><span class="st">"gdal"</span>, pyversion <span class="op">=</span> <span class="st">"auto"</span>, url_only <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<div class="section level3">
+<h3 id="install-with-automatic-python-version-detection">Install with automatic Python version detection<a class="anchor" aria-label="anchor" href="#install-with-automatic-python-version-detection"></a>
+</h3>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Auto-detect your Python version and install</span></span>
+<span><span class="fu"><a href="reference/install_wheel.html">install_wheel</a></span><span class="op">(</span><span class="st">"gdal"</span>, pyversion <span class="op">=</span> <span class="st">"auto"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Suppress the info message</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Sys.setenv.html" class="external-link">Sys.setenv</a></span><span class="op">(</span>R_RGEOWHEELS_QUIET_AUTO <span class="op">=</span> <span class="st">"TRUE"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="reference/install_wheel.html">install_wheel</a></span><span class="op">(</span><span class="st">"rasterio"</span>, pyversion <span class="op">=</span> <span class="st">"auto"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Or specify Python explicitly (suppresses message)</span></span>
+<span><span class="fu"><a href="reference/install_wheel.html">install_wheel</a></span><span class="op">(</span><span class="st">"fiona"</span>, pyversion <span class="op">=</span> <span class="st">"3.11"</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="discover-available-python-environments">Discover available Python environments<a class="anchor" aria-label="anchor" href="#discover-available-python-environments"></a>
+</h3>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/brownag/rgeowheels" class="external-link">rgeowheels</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Find available Python environments</span></span>
+<span><span class="fu"><a href="reference/detect_python_envs.html">detect_python_envs</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="install-with-specific-versions">Install with specific versions<a class="anchor" aria-label="anchor" href="#install-with-specific-versions"></a>
+</h3>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Latest version of GDAL, latest cpython, available for win_amd64 architecture</span></span>
+<span><span class="fu"><a href="reference/install_wheel.html">install_wheel</a></span><span class="op">(</span><span class="st">"GDAL"</span>, url_only <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Specific GDAL version for Python 3.10</span></span>
+<span><span class="fu"><a href="reference/install_wheel.html">install_wheel</a></span><span class="op">(</span><span class="st">"rasterio"</span>, version <span class="op">=</span> <span class="st">"1.3.4"</span>, pyversion <span class="op">=</span> <span class="st">"3.10"</span>, url_only <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Most recent version of rasterio for Python 3.8</span></span>
+<span><span class="fu"><a href="reference/install_wheel.html">install_wheel</a></span><span class="op">(</span><span class="st">"rasterio"</span>, pyversion <span class="op">=</span> <span class="st">"3.8"</span>, url_only <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="use-with-reticulate">Use with reticulate<a class="anchor" aria-label="anchor" href="#use-with-reticulate"></a>
+</h3>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rstudio.github.io/reticulate/" class="external-link">reticulate</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/brownag/rgeowheels" class="external-link">rgeowheels</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Create and activate a virtual environment</span></span>
+<span><span class="va">venv_path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/getwd.html" class="external-link">getwd</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">".venv"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rstudio.github.io/reticulate/reference/virtualenv-tools.html" class="external-link">virtualenv_create</a></span><span class="op">(</span><span class="va">venv_path</span>, python <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.which.html" class="external-link">Sys.which</a></span><span class="op">(</span><span class="st">"python"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rstudio.github.io/reticulate/reference/use_python.html" class="external-link">use_virtualenv</a></span><span class="op">(</span><span class="va">venv_path</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Install geospatial packages</span></span>
+<span><span class="fu"><a href="reference/install_wheel.html">install_wheel</a></span><span class="op">(</span><span class="st">"GDAL"</span>, pyversion <span class="op">=</span> <span class="st">"auto"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="reference/install_wheel.html">install_wheel</a></span><span class="op">(</span><span class="st">"rasterio"</span>, pyversion <span class="op">=</span> <span class="st">"auto"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Verify installation</span></span>
+<span><span class="fu"><a href="https://rstudio.github.io/reticulate/reference/py_run.html" class="external-link">py_run_string</a></span><span class="op">(</span><span class="st">"from osgeo import gdal; print(f'GDAL {gdal.__version__}')"</span><span class="op">)</span></span></code></pre></div>
+</div>
+</div>
+
   </main><aside class="col-md-3"><div class="links">
 <h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
@@ -106,7 +215,12 @@
 </ul>
 </div>
 
-
+<div class="dev-status">
+<h2 data-toc-skip>Dev status</h2>
+<ul class="list-unstyled">
+<li><a href="https://github.com/brownag/rgeowheels/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/brownag/rgeowheels/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a></li>
+</ul>
+</div>
 
   </aside>
 </div>
