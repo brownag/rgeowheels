@@ -3,3 +3,7 @@
 .RData
 .Ruserdata
 docs
+.github/*-instructions.md
+/doc/
+/Meta/
+README.html

@@ -4,12 +4,18 @@
 \alias{list_rgeowheels_assets}
 \title{List assets available from "geospatial-wheels" repository}
 \usage{
-list_rgeowheels_assets(release = NULL, update_cache = FALSE)
+list_rgeowheels_assets(
+  release = NULL,
+  update_cache = FALSE,
+  check_freshness = FALSE
+)
 }
 \arguments{
 \item{release}{Specify custom release to list assets for. Default: \code{NULL}}
 
 \item{update_cache}{Force update of wheel download index? Default: \code{FALSE}}
+
+\item{check_freshness}{Check if cached data is from the latest release? Default: \code{FALSE}}
 }
 \value{
 A \emph{data.frame} containing  \code{package}, \code{version}, \code{pyversion}, \code{architecture} and other metadata about each asset in a release.
