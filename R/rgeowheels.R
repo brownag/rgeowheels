@@ -35,6 +35,139 @@ get_rgeowheels_python <- function() {
   res
 }
 
+#' Detect Python Version
+#'
+#' Extract the major.minor Python version from a Python binary.
+#'
+#' @param python Path to Python executable. Default: `get_rgeowheels_python()`
+#'
+#' @return _character_ Python version in major.minor format (e.g., "3.11")
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#'   detect_python_version()
+#'   detect_python_version("/path/to/venv/bin/python")
+#' }
+detect_python_version <- function(python = get_rgeowheels_python()) {
+  stopifnot(length(python) == 1)
+  if (!file.exists(python)) {
+    stop("Python binary not found: ", shQuote(python), call. = FALSE)
+  }
+  res <- try(system(
+    paste(shQuote(python), "-c \"import sys; print(f'{sys.version_info.major}.{sys.version_info.minor}')\""),
+    intern = TRUE,
+    ignore.stderr = TRUE,
+    wait = TRUE
+  ), silent = TRUE)
+  if (inherits(res, 'try-error') || length(res) == 0) {
+    stop("Failed to detect Python version from: ", shQuote(python), call. = FALSE)
+  }
+  trimws(res[1])
+}
+
+#' Detect Available Python Environments
+#'
+#' Scan the system for available Python environments including virtual environments, conda environments, and system Python.
+#'
+#' @param include_system Include system Python in results? Default: `TRUE`
+#' @param project_root Directory to scan for project-local virtual environments. Default: current working directory
+#'
+#' @return A _data.frame_ with columns: `type` (venv/conda/system), `path`, `version`, `active`
+#' @export
+#'
+#' @details
+#' Scans for virtual environments in the following project-local directories (in order):
+#' `.venv`, `venv`, `.virtualenv`, `env`
+#'
+#' Also detects active virtual environment via `VIRTUAL_ENV` environment variable and active conda environment via `CONDA_DEFAULT_ENV`.
+#'
+#' @examples
+#' \dontrun{
+#'   detect_python_envs()
+#'   detect_python_envs(project_root = "/path/to/project")
+#' }
+detect_python_envs <- function(include_system = TRUE, project_root = getwd()) {
+  envs <- data.frame(
+    type = character(),
+    path = character(),
+    version = character(),
+    active = logical(),
+    stringsAsFactors = FALSE
+  )
+
+  active_venv <- Sys.getenv("VIRTUAL_ENV")
+  active_conda <- Sys.getenv("CONDA_DEFAULT_ENV")
+  active_python <- get_rgeowheels_python()
+
+  # Scan for project-local venvs
+  venv_patterns <- c(".venv", "venv", ".virtualenv", "env")
+  for (pattern in venv_patterns) {
+    venv_path <- file.path(project_root, pattern)
+    if (dir.exists(venv_path)) {
+      python_bin <- if (.Platform$OS.type == "windows") {
+        file.path(venv_path, "Scripts", "python.exe")
+      } else {
+        file.path(venv_path, "bin", "python")
+      }
+      if (file.exists(python_bin)) {
+        py_version <- try(detect_python_version(python_bin), silent = TRUE)
+        if (!inherits(py_version, 'try-error')) {
+          envs <- rbind(envs, data.frame(
+            type = "venv",
+            path = venv_path,
+            version = py_version,
+            active = venv_path == active_venv || python_bin == active_python,
+            stringsAsFactors = FALSE
+          ))
+        }
+      }
+    }
+  }
+
+  # Detect active conda environment
+  if (active_conda != "") {
+    conda_python <- if (.Platform$OS.type == "windows") {
+      file.path(active_conda, "python.exe")
+    } else {
+      file.path(active_conda, "bin", "python")
+    }
+    if (file.exists(conda_python)) {
+      py_version <- try(detect_python_version(conda_python), silent = TRUE)
+      if (!inherits(py_version, 'try-error')) {
+        envs <- rbind(envs, data.frame(
+          type = "conda",
+          path = active_conda,
+          version = py_version,
+          active = TRUE,
+          stringsAsFactors = FALSE
+        ))
+      }
+    }
+  }
+
+  # Add system Python if requested
+  if (isTRUE(include_system)) {
+    sys_python <- get_rgeowheels_python()
+    if (file.exists(sys_python)) {
+      py_version <- try(detect_python_version(sys_python), silent = TRUE)
+      if (!inherits(py_version, 'try-error')) {
+        env_type <- if (active_venv == "") "system" else "system"
+        is_active <- sys_python == active_python && active_venv == ""
+        envs <- rbind(envs, data.frame(
+          type = env_type,
+          path = sys_python,
+          version = py_version,
+          active = is_active,
+          stringsAsFactors = FALSE
+        ))
+      }
+    }
+  }
+
+  envs
+}
+
 .get_release <- function(i = 1) {
 
   r <- try(readLines("https://github.com/cgohlke/geospatial-wheels/releases.atom"))
@@ -140,7 +273,7 @@ list_rgeowheels_assets <- function(release = NULL, update_cache = FALSE) {
 #'
 #' @param package Python package name to install. e.g. `"rasterio"`
 #' @param version Python package version to install. Default `"latest"` determines latest version available from asset list (considers `pyversion` if set).
-#' @param pyversion Python version to install package for. Default `"latest"` determines latest version available from asset list.
+#' @param pyversion Python version to install package for. Default `"latest"` determines latest version available from asset list. Use `"auto"` to detect the Python version from the specified Python binary.
 #' @param architecture Python package version to install. Default `"win_amd64"`, alternatives include `"win_arm64`" and `"win32"`.
 #' @param python Path to Python executable to use for install. Default: `get_rgeowheels_python()`
 #' @param destdir Destination directory for downloaded wheel file. Default: `tempdir()`
@@ -164,6 +297,18 @@ install_wheel <- function(package,
   architecture <- match.arg(tolower(trimws(architecture)), c("win32", "win_amd64", "win_arm64"))
   l <- list_rgeowheels_assets()
 
+  # Handle auto-detection of Python version
+  auto_detected_pyversion <- NA_character_
+  if (pyversion == "auto") {
+    auto_detected_pyversion <- detect_python_version(python)
+    pyversion <- auto_detected_pyversion
+    quiet_auto <- Sys.getenv("R_RGEOWHEELS_QUIET_AUTO", unset = "")
+    quiet_auto <- quiet_auto == "TRUE" || quiet_auto == "true" || isTRUE(getOption("rgeowheels.quiet_auto"))
+    if (!quiet_auto) {
+      message("Auto-selected Python ", pyversion, " for ", package)
+    }
+  }
+
   if (pyversion == "latest" && package %in% l$package) {
     ll <- l[l$package == package, ]
     # TODO: package_version() is too strict for python versions
@@ -184,8 +329,13 @@ install_wheel <- function(package,
                  l$architecture == architecture)
 
   if (length(idx) == 0) {
+    # Generate helpful error message with available versions
+    available_msg <- .get_available_versions_message(
+      l, package, pyversion, architecture
+    )
     stop("could not find wheels for:\n     - '", package, "' version '", version,
-         "' for Python '", pyversion, "' (", architecture, ")", call. = FALSE)
+         "' for Python '", pyversion, "' (", architecture, ")",
+         available_msg, call. = FALSE)
   } else {
     path <- l[idx[1], ]$browser_download_url
     if (url_only) {
@@ -212,4 +362,19 @@ install_wheel <- function(package,
     ignore.stdout = FALSE,
     wait = TRUE
   )
+}
+
+.get_available_versions_message <- function(assets, package, pyversion, architecture) {
+  msg <- ""
+  
+  # Try to find available Python versions for this package/architecture
+  pkg_assets <- assets[assets$package == package & assets$architecture == architecture, ]
+  if (nrow(pkg_assets) > 0) {
+    avail_pyversions <- unique(pkg_assets$pyversion)
+    avail_pyversions <- sort(avail_pyversions)
+    msg <- paste0("\n     Available Python versions for '", package, "' (", architecture, "): ",
+                  paste(avail_pyversions, collapse = ", "))
+  }
+  
+  msg
 }
