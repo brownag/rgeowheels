@@ -6,6 +6,10 @@
 * Add message suppression for auto-detection via environment variable and R options
 * Add improved error messages showing available Python versions
 * Add comprehensive vignette for installing GDAL on Windows with reticulate integration
+* Add `refresh_rgeowheels_cache()` for explicit cache updates
+* Add informative GitHub API rate limit error messages with reset times
+* Add smart retry logic with `httr::RETRY` for server errors only
+* Add cache freshness checking with 1-hour result caching
 
 # rgeowheels 0.0.5
 
