@@ -8,6 +8,12 @@ vignette: >
 ---
 
 ```{r, include = FALSE}
+# Check for required packages at vignette build time
+has_reticulate <- requireNamespace("reticulate", quietly = TRUE)
+has_rgeowheels <- requireNamespace("rgeowheels", quietly = TRUE)
+
+# By default, don't execute chunks (they require manual setup)
+# Individual chunks can opt-in with eval = TRUE
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
@@ -40,7 +46,7 @@ The recommended approach is to create a dedicated Python virtual environment for
 
 If you already have Python installed, you can create a virtual environment directly in R using **reticulate**:
 
-```{r}
+```{r create-venv}
 library(reticulate)
 
 # Create a virtual environment in your project directory
@@ -71,7 +77,7 @@ conda activate myenv
 
 Before installing wheels, it's helpful to understand what Python environments are available. The `detect_python_envs()` function scans your system for virtual environments and conda environments:
 
-```{r}
+```{r detect-envs, eval = requireNamespace("rgeowheels", quietly = TRUE)}
 library(rgeowheels)
 
 # Discover available Python environments
@@ -86,15 +92,18 @@ print(envs)
 
 You can also check the Python version of a specific environment:
 
-```{r}
+```{r detect-version, eval = FALSE}
 # Get the version of the currently active Python
 current_version <- detect_python_version()
 print(current_version)
 # [1] "3.11"
 
-# Or check a specific Python binary
+# Or check a specific Python binary (wrapped in try to handle venv if not present)
 venv_python <- file.path(".venv", "Scripts", "python.exe")  # Windows
-venv_version <- detect_python_version(venv_python)
+if (file.exists(venv_python)) {
+  venv_version <- detect_python_version(venv_python)
+  print(venv_version)
+}
 ```
 
 ## Installing GDAL via rgeowheels
@@ -105,7 +114,7 @@ Once you have a Python environment set up and activated, installing GDAL is stra
 
 The simplest approach is to use `pyversion = "auto"` to automatically detect your Python version and match it to available wheels:
 
-```{r}
+```{r install-auto}
 library(rgeowheels)
 library(reticulate)
 
@@ -129,21 +138,21 @@ If you want to use auto-detection but suppress the informational message (useful
 
 **Option 1: Set an environment variable**
 
-```{r}
+```{r suppress-msg-1}
 Sys.setenv(R_RGEOWHEELS_QUIET_AUTO = "TRUE")
 install_wheel("GDAL", pyversion = "auto")
 ```
 
 **Option 2: Set an R option**
 
-```{r}
+```{r suppress-msg-2}
 options(rgeowheels.quiet_auto = TRUE)
 install_wheel("GDAL", pyversion = "auto")
 ```
 
 **Option 3: Explicitly specify the Python version**
 
-```{r}
+```{r suppress-msg-3}
 # Once you know the version, you can pin it explicitly (message is suppressed)
 install_wheel("GDAL", pyversion = "3.11")
 ```
@@ -152,7 +161,7 @@ install_wheel("GDAL", pyversion = "3.11")
 
 If you need a specific version of GDAL for a specific Python version:
 
-```{r}
+```{r explicit-version}
 install_wheel(
   package = "GDAL",
   version = "3.8.4",        # Specific GDAL version
@@ -165,7 +174,7 @@ install_wheel(
 
 Before installing, you can see what versions are available:
 
-```{r}
+```{r list-versions, eval = requireNamespace("rgeowheels", quietly = TRUE)}
 # List all available wheels
 assets <- list_rgeowheels_assets()
 
@@ -181,7 +190,7 @@ gdal_py311 <- assets[assets$package == "GDAL" & assets$pyversion == "3.11", ]
 
 Here's a complete workflow combining reticulate venv creation with rgeowheels installation:
 
-```{r}
+```{r complete-workflow}
 library(reticulate)
 library(rgeowheels)
 
@@ -232,7 +241,7 @@ This means GDAL wheels aren't available for Python 3.9. You have two options:
 1. **Update Python**: Upgrade to a supported version (3.10, 3.11, or 3.12)
 2. **Explicit version**: Specify an available Python version
 
-```{r}
+```{r troubleshoot-versions}
 # Upgrade your venv to Python 3.11
 virtualenv_create(".venv_311", python = "C:/Python311/python.exe")
 use_virtualenv(".venv_311")
@@ -249,7 +258,7 @@ If `detect_python_version()` fails with "Python binary not found", ensure:
 2. Your virtual environment is activated: `use_virtualenv(".venv")`
 3. You've set the Python path explicitly:
 
-```{r}
+```{r troubleshoot-binary}
 set_rgeowheels_python("C:/path/to/venv/Scripts/python.exe")
 detect_python_version()
 ```
@@ -258,7 +267,7 @@ detect_python_version()
 
 If you have multiple Python installations, you can explicitly set which one rgeowheels uses:
 
-```{r}
+```{r custom-python}
 # Set for this session
 set_rgeowheels_python("C:/Python311/python.exe")
 
@@ -312,7 +321,7 @@ jobs:
       
       - name: Run tests
         run: |
-          Rscript -e 'testthat::test_dir("tests")'
+          Rscript -e 'tinytest::test_all()'
 ```
 
 ## Performance Benefits
