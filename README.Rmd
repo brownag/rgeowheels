@@ -7,6 +7,9 @@ cat("<!-- This file is read-only. README.md is generated from README.Rmd. Please
 ```
 
 ```{r, include = FALSE}
+# Check if running on Windows (required for wheel installation)
+is_windows <- .Platform$OS.type == "windows"
+
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
@@ -71,7 +74,9 @@ head(gdal_wheels[, c("package", "version", "pyversion", "architecture")])
 
 # Get URL to Wheel File
 
-```{r url-auto, eval = TRUE}
+```{r url-auto, eval = is_windows}
+library(rgeowheels)
+
 # Auto-detect your Python version and return URL
 install_wheel("gdal", pyversion = "auto", url_only = TRUE)
 ```
@@ -92,7 +97,9 @@ install_wheel("fiona", pyversion = "3.11")
 
 ### Discover available Python environments
 
-```{r detect-envs}
+```{r detect-envs, eval = FALSE}
+library(rgeowheels)
+
 # Find available Python environments
 detect_python_envs()
 ```
@@ -126,5 +133,5 @@ install_wheel("GDAL", pyversion = "auto")
 install_wheel("rasterio", pyversion = "auto")
 
 # Verify installation
-py_run_string("import gdal; print(f'GDAL {gdal.__version__}')")
+py_run_string("from osgeo import gdal; print(f'GDAL {gdal.__version__}')")
 ```

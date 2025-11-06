@@ -82,10 +82,10 @@ head(gdal_wheels[, c("package", "version", "pyversion", "architecture")])
 # Get URL to Wheel File
 
 ``` r
+library(rgeowheels)
+
 # Auto-detect your Python version and return URL
 install_wheel("gdal", pyversion = "auto", url_only = TRUE)
-#> Auto-selected Python 3.12 for gdal
-#> [1] "https://github.com/cgohlke/geospatial-wheels/releases/download/v2025.10.25/gdal-3.11.4-cp312-cp312-win_amd64.whl"
 ```
 
 ### Install with automatic Python version detection
@@ -105,10 +105,10 @@ install_wheel("fiona", pyversion = "3.11")
 ### Discover available Python environments
 
 ``` r
+library(rgeowheels)
+
 # Find available Python environments
 detect_python_envs()
-#>          type            path version active
-#> python system /usr/bin/python    3.12   TRUE
 ```
 
 ### Install with specific versions
@@ -140,5 +140,5 @@ install_wheel("GDAL", pyversion = "auto")
 install_wheel("rasterio", pyversion = "auto")
 
 # Verify installation
-py_run_string("import gdal; print(f'GDAL {gdal.__version__}')")
+py_run_string("from osgeo import gdal; print(f'GDAL {gdal.__version__}')")
 ```
