@@ -41,12 +41,40 @@ NULL
   cp <- file.path(tools::R_user_dir("rgeowheels", "cache"), "assets.csv")
   if (file.exists(cp)) {
     x <- read.csv(cp)
-    mu <- gsub("(.*)T.*", "\\1", x$updated_at[1])
-    re <- x$release[1]
+    mu <- if ("updated_at" %in% names(x)) {
+      gsub("(.*)T.*", "\\1", x$updated_at[1])
+    } else {
+      "<unknown>"
+    }
+    re <- if ("release" %in% names(x)) {
+      x$release[1]
+    } else {
+      # For latest release, construct URL from metadata if available
+      mf <- file.path(tools::R_user_dir("rgeowheels", "cache"), "metadata.rds")
+      if (file.exists(mf)) {
+        metadata <- readRDS(mf)
+        paste0("https://github.com/cgohlke/geospatial-wheels/releases/tag/", metadata$tag_name)
+      } else {
+        "<latest>"
+      }
+    }
+
+    # Only check freshness if cache is more than 24 hours old
+    stale_msg <- ""
+    cache_age_hours <- difftime(Sys.time(), file.mtime(cp), units = "hours")
+    if (cache_age_hours > 24) {
+      freshness <- .check_cache_freshness()
+      if (!freshness$fresh && !is.null(freshness$current_tag) && !is.null(freshness$latest_tag)) {
+        stale_msg <- paste0("\n - Cache is outdated (current: ", freshness$current_tag,
+                           ", latest: ", freshness$latest_tag, ")")
+      }
+    }
   } else {
     mu <- "<not found>"
     re <- "<not found>"
+    stale_msg <- ""
   }
+
   packageStartupMessage(
     "rgeowheels ",
     packageVersion("rgeowheels"),
@@ -54,7 +82,7 @@ NULL
     ifelse(
       mu == "<not found>",
       " - Cached release asset list not found, run `list_rgeowheels_assets()` to begin.",
-      paste0(" - Latest cached release: ", mu, "\n <", re, ">")
+      paste0(" - Latest cached release: ", mu, "\n <", re, ">", stale_msg)
     )
   )
 }

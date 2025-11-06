@@ -11,7 +11,7 @@ Description: Downloads pre-compiled 'Windows' 'wheel' files (.whl) for 'Python' 
   via 'GitHub' releases, providing the ability to revert to prior versions when needed.
   Automatically detects and matches Python versions, with support for virtual environments
   and conda environments.
-Imports: tools, utils, jsonlite
+Imports: tools, utils, jsonlite, httr
 Suggests: tinytest, reticulate, knitr, rmarkdown
 Encoding: UTF-8
 Language: en-US

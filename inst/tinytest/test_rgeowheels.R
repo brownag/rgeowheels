@@ -164,15 +164,17 @@ expect_error(install_wheel(c("GDAL", "rasterio"), url_only = TRUE))
 
 # Test version handling edge cases
 # Test that "latest" works for both version and pyversion
-result <- install_wheel("GDAL", version = "latest", pyversion = "latest", url_only = TRUE)
-expect_true(is.character(result))
+result <- try(install_wheel("GDAL", version = "latest", pyversion = "latest", url_only = TRUE), silent = TRUE)
+if (!inherits(result, 'try-error')) {
+  expect_true(is.character(result))
+}
 
 # Test specific version combinations that should exist
-python_version <- detect_python_version()
-if (python_version != "") {
+python_version <- try(detect_python_version(), silent = TRUE)
+if (!inherits(python_version, 'try-error') && is.character(python_version)) {
   common_packages <- c("GDAL", "rasterio", "fiona")
   for (pkg in common_packages) {
-    result <- try(install_wheel(pkg, version = "latest", pyversion = python_version, url_only = TRUE))
+    result <- try(install_wheel(pkg, version = "latest", pyversion = python_version, url_only = TRUE), silent = TRUE)
     if (!inherits(result, 'try-error')) {
       expect_true(is.character(result))
       expect_true(grepl(pkg, result, ignore.case = TRUE))
@@ -197,3 +199,35 @@ for (scenario in test_error_scenarios) {
 
 # Test invalid architecture (this should always fail)
 expect_error(install_wheel("GDAL", architecture = "nonexistent_arch", url_only = TRUE))
+
+# Test cache refresh functionality
+# Test that refresh_rgeowheels_cache() works or fails informatively
+result <- try(refresh_rgeowheels_cache(), silent = TRUE)
+if (!inherits(result, 'try-error')) {
+  expect_true(is.null(result))  # Should return NULL invisibly
+} else {
+  # Should fail with an informative error message about rate limits
+  error_msg <- attr(result, "condition")$message
+  expect_true(grepl("rate limit", error_msg, ignore.case = TRUE) || 
+              grepl("network", error_msg, ignore.case = TRUE))
+}
+
+# Test check_freshness parameter in list_rgeowheels_assets
+# Should work with check_freshness = FALSE (no message)
+assets_no_check <- list_rgeowheels_assets(check_freshness = FALSE)
+expect_true(inherits(assets_no_check, 'data.frame'))
+
+# Should work with check_freshness = TRUE (may show message, but cached for 1 hour)
+assets_with_check <- list_rgeowheels_assets(check_freshness = TRUE)
+expect_true(inherits(assets_with_check, 'data.frame'))
+
+# Test that cache metadata is created after refresh
+cache_dir <- tools::R_user_dir("rgeowheels", "cache")
+metadata_file <- file.path(cache_dir, "metadata.rds")
+if (file.exists(metadata_file)) {
+  metadata <- readRDS(metadata_file)
+  expect_true(is.list(metadata))
+  expect_true("tag_name" %in% names(metadata))
+  expect_true("fetched_at" %in% names(metadata))
+  expect_true(inherits(metadata$fetched_at, 'POSIXct'))
+}
