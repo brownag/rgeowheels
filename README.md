@@ -5,7 +5,7 @@
 
 <!-- badges: start -->
 
-[![R-CMD-check](https://github.com/brownag/rgeowheels/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/brownag/rgeowheels/actions/workflows/R-CMD-check.yaml)
+[![R-CMD-check](https://github.com/brownag/rgeowheels/actions/workflows/R-CMD-check.yml/badge.svg)](https://github.com/brownag/rgeowheels/actions/workflows/R-CMD-check.yml)
 <!-- badges: end -->
 
 Downloads pre-compiled Windows ‘wheel’ files (.whl) for Python
@@ -46,9 +46,7 @@ detection:
 ``` r
 library(rgeowheels)
 
-# Auto-detect Python version and install GDAL
 install_wheel("GDAL", pyversion = "auto")
-#> Display a message: "Auto-selected Python 3.11 for GDAL"
 ```
 
 For more details, see the vignette:
@@ -86,6 +84,8 @@ library(rgeowheels)
 
 # Auto-detect your Python version and return URL
 install_wheel("gdal", pyversion = "auto", url_only = TRUE)
+#> Auto-selected Python 3.12 for gdal
+#> [1] "https://github.com/cgohlke/geospatial-wheels/releases/download/v2025.10.25/gdal-3.11.4-cp312-cp312-win_amd64.whl"
 ```
 
 ### Install with automatic Python version detection
