@@ -87,9 +87,7 @@
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/brownag/rgeowheels" class="external-link">rgeowheels</a></span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Auto-detect Python version and install GDAL</span></span>
-<span><span class="fu"><a href="reference/install_wheel.html">install_wheel</a></span><span class="op">(</span><span class="st">"GDAL"</span>, pyversion <span class="op">=</span> <span class="st">"auto"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Display a message: "Auto-selected Python 3.11 for GDAL"</span></span></code></pre></div>
+<span><span class="fu"><a href="reference/install_wheel.html">install_wheel</a></span><span class="op">(</span><span class="st">"GDAL"</span>, pyversion <span class="op">=</span> <span class="st">"auto"</span><span class="op">)</span></span></code></pre></div>
 <p>For more details, see the vignette: <code><a href="articles/installing-gdal-windows.html">vignette("installing-gdal-windows")</a></code></p>
 </div>
 <div class="section level2">
@@ -127,7 +125,9 @@
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/brownag/rgeowheels" class="external-link">rgeowheels</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Auto-detect your Python version and return URL</span></span>
-<span><span class="fu"><a href="reference/install_wheel.html">install_wheel</a></span><span class="op">(</span><span class="st">"gdal"</span>, pyversion <span class="op">=</span> <span class="st">"auto"</span>, url_only <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="reference/install_wheel.html">install_wheel</a></span><span class="op">(</span><span class="st">"gdal"</span>, pyversion <span class="op">=</span> <span class="st">"auto"</span>, url_only <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Auto-selected Python 3.12 for gdal</span></span>
+<span><span class="co">#&gt; [1] "https://github.com/cgohlke/geospatial-wheels/releases/download/v2025.10.25/gdal-3.11.4-cp312-cp312-win_amd64.whl"</span></span></code></pre></div>
 <div class="section level3">
 <h3 id="install-with-automatic-python-version-detection">Install with automatic Python version detection<a class="anchor" aria-label="anchor" href="#install-with-automatic-python-version-detection"></a>
 </h3>
@@ -218,7 +218,7 @@
 <div class="dev-status">
 <h2 data-toc-skip>Dev status</h2>
 <ul class="list-unstyled">
-<li><a href="https://github.com/brownag/rgeowheels/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/brownag/rgeowheels/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a></li>
+<li><a href="https://github.com/brownag/rgeowheels/actions/workflows/R-CMD-check.yml" class="external-link"><img src="https://github.com/brownag/rgeowheels/actions/workflows/R-CMD-check.yml/badge.svg" alt="R-CMD-check"></a></li>
 </ul>
 </div>
 
@@ -231,7 +231,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer>
